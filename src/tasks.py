@@ -114,7 +114,7 @@ class LinearRegression(Task):
         return mean_squared_error
 
 
-class MatrixCompletion:
+class MatrixCompletion(Task):
     """
     Task Matrix Completion.
     Evaluer f(x) = vec(M)^T x pour x_i ∈ {e_1,...,e_d}

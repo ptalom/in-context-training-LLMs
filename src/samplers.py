@@ -31,7 +31,7 @@ def sample_transformation(eigenvalues, normalize=False):
         t *= math.sqrt(n_dims / norm_subspace)
     return t
 
-class MatrixCompletionSampler:
+class MatrixCompletionSampler(DataSampler):
     """
     Sampler pour la matrix completion.
     Génère les vecteurs x_i ∈ {e_1,...,e_d} pour construire un prompt P.

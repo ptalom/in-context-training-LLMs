@@ -16,7 +16,7 @@ training:
     train_steps: 100000
     curriculum:
         dims:
-            start: 5
-            end: 20
+            start: 49
+            end: 49
             inc: 1
             interval: 2000
