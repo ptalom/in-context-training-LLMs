@@ -1,0 +1,19 @@
+
+torch
+matplotlib
+numpy
+pandas
+seaborn
+scikit-learn
+tqdm
+python
+quinine
+    - Cerberus
+    - pyyaml
+    - munch
+    - cytoolz
+    - funcy
+    - toposort
+jupyter
+transformers
+wandb
