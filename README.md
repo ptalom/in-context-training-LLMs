@@ -13,6 +13,7 @@ We test the performance of Transformers by changing coherence controller alpha/b
 ## Setup
 ```bash
 git clone https://github.com/ptalom/in-context-training-LLMs.git
+cd in-context-training-LLMs
 cd src
 ```
 
