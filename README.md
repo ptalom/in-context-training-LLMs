@@ -31,7 +31,10 @@ Install the dependencies for our code using Conda. You may need to adjust the en
     ```
 
 
-- `train.py` takes as argument a configuration yaml from `conf` and trains the corresponding model. You can try `python src/train.py --config conf/matrix_completion.yaml` for a quick training run.
+- `train.py` takes as argument a configuration yaml from `conf` and trains the corresponding model. 
+
+## Training 
+You can try `python src/train.py --config conf/matrix_completion.yaml` for a quick training run.
 
 ## Contributors
 - Patrick C. Talom
