@@ -1,0 +1,24 @@
+inherit: 
+    - base.yaml
+
+training:
+    task: matrix_completion
+    task_kwargs:
+        rank: 2
+        m: 7
+        n: 7
+        sampling: "coherence"        # uniform, coherence, magnitude
+        hard: false                # hard vs soft sampling
+        alpha: 0.5
+        beta: 0.5
+    curriculum:
+        points:
+            start: 41
+            end: 41
+            inc: 2
+            interval: 2000
+
+out_dir: ../models/matrix_completion
+
+wandb:
+    name: "matrix_completion"
