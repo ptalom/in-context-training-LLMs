@@ -5,16 +5,16 @@ training:
     task: matrix_completion
     task_kwargs:
         rank: 2
-        m: 7
-        n: 7
+        m: 5
+        n: 5
         sampling: "coherence"        # uniform, coherence, magnitude
         hard: false                # hard vs soft sampling
-        alpha: 0.5
-        beta: 0.5
+        alpha: 1
+        beta: 1
     curriculum:
         points:
-            start: 41
-            end: 41
+            start: 11
+            end: 11
             inc: 2
             interval: 2000
 

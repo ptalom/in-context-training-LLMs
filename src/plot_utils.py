@@ -1,4 +1,5 @@
 import os
+import numpy as np
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -16,37 +17,12 @@ relevant_model_names = {
         "Least Squares",
         "Nuclear Norm Minimization (epsilon=1e-06)",
     ],
-    "linear_regression": [
-        "Transformer",
-        "Least Squares",
-        "3-Nearest Neighbors",
-        "Averaging",
-    ],
-    "sparse_linear_regression": [
-        "Transformer",
-        "Least Squares",
-        "3-Nearest Neighbors",
-        "Averaging",
-        "Lasso (alpha=0.01)",
-    ],
-    "decision_tree": [
-        "Transformer",
-        "3-Nearest Neighbors",
-        "2-layer NN, GD",
-        "Greedy Tree Learning",
-        "XGBoost",
-    ],
-    "relu_2nn_regression": [
-        "Transformer",
-        "Least Squares",
-        "3-Nearest Neighbors",
-        "2-layer NN, GD",
-    ],
 }
 
 
-def basic_plot(metrics, models=None, trivial=1.0):
-    fig, ax = plt.subplots(1, 1)
+
+def basic_plot(metrics, models=None, trivial=1.0, figsize=(12,8)):
+    fig, ax = plt.subplots(1, 1, figsize=figsize)
 
     if models is not None:
         metrics = {k: metrics[k] for k in models}
@@ -70,7 +46,6 @@ def basic_plot(metrics, models=None, trivial=1.0):
         line.set_linewidth(3)
 
     return fig, ax
-
 
 def collect_results(run_dir, df, valid_row=None, rename_eval=None, rename_model=None):
     all_metrics = {}
@@ -108,6 +83,7 @@ def collect_results(run_dir, df, valid_row=None, rename_eval=None, rename_model=
 
                 for k, v in m.items():
                     v = v[:xlim]
+                    print("DEBUG: k=", k, "v=", v)
                     v = [vv / normalization for vv in v]
                     m_processed[k] = v
                 processed_results[model_name] = m_processed

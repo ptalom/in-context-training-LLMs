@@ -160,40 +160,34 @@ def eval_model(
     task_sampler_kwargs=None,
 ):
     """
-    Evaluate a model on a task with a variety of strategies.
+    Évalue un modèle sur une tâche donnée en utilisant les kwargs directement depuis YAML.
     """
-
     if data_sampler_kwargs is None:
         data_sampler_kwargs = {}
     if task_sampler_kwargs is None:
         task_sampler_kwargs = {}
 
-
     if data_name == "matrix_completion":
-        data_sampler_kwargs.setdefault("m", 7)
-        data_sampler_kwargs.setdefault("n", 7)
-        data_sampler_kwargs.setdefault("rank", 2)
-        data_sampler_kwargs.setdefault("sampling", "uniform")
-        data_sampler_kwargs.setdefault("hard", False)
+        for key in ["m", "n", "rank", "sampling", "hard", "alpha", "beta"]:
+            if key in task_sampler_kwargs:
+                data_sampler_kwargs[key] = task_sampler_kwargs[key]
 
     assert num_eval_examples % batch_size == 0
+
     data_sampler = get_data_sampler(data_name, n_dims, **data_sampler_kwargs)
-    task_sampler = get_task_sampler(
-        task_name, n_dims, batch_size, **task_sampler_kwargs
-    )
+    task_sampler = get_task_sampler(task_name, n_dims, batch_size, **task_sampler_kwargs)
 
     all_metrics = []
-
     generating_func = globals()[f"gen_{prompting_strategy}"]
+
     for i in range(num_eval_examples // batch_size):
         xs, xs_p = generating_func(data_sampler, n_points, batch_size)
-
         metrics = eval_batch(model, task_sampler, xs, xs_p)
         all_metrics.append(metrics)
 
     metrics = torch.cat(all_metrics, dim=0)
-
     return aggregate_metrics(metrics)
+
 
 
 def build_evals(conf):
@@ -202,20 +196,24 @@ def build_evals(conf):
     Spécialement adapté à MatrixCompletion.
     """
     n_dims = conf.model.n_dims
-    n_points = conf.training.curriculum.points.end
+    n_points = conf.training.curriculum.points.start
     batch_size = conf.training.batch_size
 
     task_name = conf.training.task
     data_name = conf.training.data
 
-    # Arguments de base partagés pour toutes les évaluations
+    data_sampler_kwargs = conf.training.task_kwargs.copy()
+    task_sampler_kwargs = conf.training.task_kwargs.copy()
+
     base_kwargs = {
-        "task_name": task_name,
+        "task_name": conf.training.task,
         "n_dims": n_dims,
         "n_points": n_points,
         "batch_size": batch_size,
-        "data_name": data_name,
+        "data_name": conf.training.data,
         "prompting_strategy": "standard",
+        "data_sampler_kwargs": data_sampler_kwargs,
+        "task_sampler_kwargs": task_sampler_kwargs,
     }
 
     evaluation_kwargs = {}
@@ -235,7 +233,6 @@ def build_evals(conf):
 
         return evaluation_kwargs
 
-    # Si c'est MatrixCompletion, on peut ajouter des stratégies spécifiques
     if task_name == "matrix_completion":
         # Exemple : différentes tailles de prompts
         for n_pts in [int(n_points * f) for f in [0.5, 1.0, 1.5]]:
@@ -252,8 +249,7 @@ def build_evals(conf):
                 "data_sampler_kwargs": {"scale": t}
             }
         """
-        
-        # Hard vs soft sampling pour MatrixCompletion
+
         for sampling_type in ["uniform", "coherence"]:
             for hard in [True, False]:
                 evaluation_kwargs[f"{sampling_type}-hard={hard}"] = {
@@ -343,20 +339,6 @@ def conf_to_model_name(conf):
 def baseline_names(name):
     if "OLS" in name:
         return "Least Squares"
-    if name == "averaging":
-        return "Averaging"
-    if "NN" in name:
-        k = name.split("_")[1].split("=")[1]
-        return f"{k}-Nearest Neighbors"
-    if "lasso" in name:
-        alpha = name.split("_")[1].split("=")[1]
-        return f"Lasso (alpha={alpha})"
-    if "gd" in name:
-        return "2-layer NN, GD"
-    if "decision_tree" in name:
-        return "Greedy Tree Learning"
-    if "xgboost" in name:
-        return "XGBoost"
     if "nuclear_norm" in name:
         epsilon = name.split("_")[-1].split("=")[1]
         return f"Nuclear Norm Minimization (epsilon={epsilon})"

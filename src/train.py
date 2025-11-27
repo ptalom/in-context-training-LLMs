@@ -31,7 +31,7 @@ print(f"Using device: {device}")
 def train_step(model, xs, ys, optimizer, loss_func):
     optimizer.zero_grad()
     output = model(xs, ys)
-    loss = loss_func(output, ys)
+    loss = loss_func(output, ys) 
     loss.backward()
     optimizer.step()
     return loss.detach().item(), output.detach()
@@ -91,7 +91,7 @@ def train(model, args):
             **data_sampler_args,
         )
         task = task_sampler(**task_sampler_args)
-        ys = task.evaluate(xs)
+        ys = task.evaluate(xs, target_n_dims=model.n_dims, target_n_points=curriculum.n_points)
 
         # Déplacement des tenseurs sur le device
         xs, ys = xs.to(device), ys.to(device)
@@ -118,7 +118,7 @@ def train(model, args):
                     "overall_loss": loss,
                     "excess_loss": loss / baseline_loss,
                     "pointwise/loss": dict(
-                        zip(point_wise_tags, point_wise_loss.cpu().numpy())
+                        zip(point_wise_tags, point_wise_loss.detach().cpu().numpy())
                     ),
                     "n_points": curriculum.n_points,
                     "n_dims": curriculum.n_dims_truncated,
