@@ -28,7 +28,7 @@ def get_relevant_baselines(task_name):
     task_to_baselines = {
         "matrix_completion": [
             (LeastSquaresModel, {}),
-            (NuclearNormMinimizationModel, {"m": 5, "n": 5, "epsilon": 1e-6}),
+            (NuclearNormMinimizationModel, {"m": 10, "n": 10, "epsilon": 1e-6}),
         ],
     }
 
