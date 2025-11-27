@@ -5,7 +5,7 @@ import torch.nn as nn
 
 from samplers import power_law_matrix
 
-"""
+
 def squared_error(ys_pred, ys):
     # comparer uniquement la première dimension
     return ((ys_pred[..., 0] - ys[..., 0])**2)
@@ -25,7 +25,7 @@ def mean_squared_error(ys_pred, ys):
     mean_squared_error = (ys - ys_pred).square().mean()
     #print("mean_squared_error:", ys_pred)
     return mean_squared_error
-
+"""
 
 def accuracy(ys_pred, ys):
     return (ys == ys_pred.sign()).float()

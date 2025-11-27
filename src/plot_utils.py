@@ -83,7 +83,7 @@ def collect_results(run_dir, df, valid_row=None, rename_eval=None, rename_model=
 
                 for k, v in m.items():
                     v = v[:xlim]
-                    print("DEBUG: k=", k, "v=", v)
+                    #print("DEBUG: k=", k, "v=", v)
                     v = [vv / normalization for vv in v]
                     m_processed[k] = v
                 processed_results[model_name] = m_processed
