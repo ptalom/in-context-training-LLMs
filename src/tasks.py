@@ -196,8 +196,8 @@ class MatrixCompletion(Task):
 
         # Copier les valeurs scalaires dans la première dimension
         ys_b[:, :n_points, 0] = scalar_vals[:, :, 0]
-        print("ys_b shape:", ys_b.shape)
-        print("ys_1 : ", ys_b[0])
+        #print("ys_b shape:", ys_b.shape)
+        #print("ys_1 : ", ys_b[0])
 
         return ys_b
     
